@@ -1,5 +1,8 @@
 import React, { useState } from "react";
+import { useHistory } from "react-router";
 const Register = () => {
+
+  const history = useHistory("");
     const setdata = (e) => {
         console.log(e.target.value);
        const {name, value} = e.target;
@@ -35,8 +38,10 @@ const Register = () => {
 
        if (res.status === 422 || !data) {
            console.log("error ");
-           alert("error"); } else {
-      //     history.push("/")
+           alert("error"); } 
+           else {
+            alert("added data");
+          history.push("/")
       //     setUdata(data)
           console.log("data added");
 

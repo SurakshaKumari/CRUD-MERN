@@ -1,7 +1,12 @@
-import React, {useState} from "react";
-
+import React, { useContext, useEffect, useState } from 'react'
+import { NavLink, useParams, useHistory } from 'react-router-dom'
+import { updatedata } from './context/contextprovider'
 
 const Edit = () => {
+
+  const {updata, setUPdata} = useContext(updatedata)
+
+  const history = useHistory("");
 
     const setdata = (e) => {
         console.log(e.target.value);
@@ -18,6 +23,66 @@ const Edit = () => {
         email:"",
         image:""
     })
+
+
+    const { id } = useParams("");
+    console.log(id);
+
+    const getdata = async () => {
+
+      const res = await fetch(`/getuser/${id}`, {
+          method: "GET",
+          headers: {
+              "Content-Type": "application/json"
+          }
+      });
+
+      const data = await res.json();
+      console.log(data);
+
+      if (res.status === 422 || !data) {
+          console.log("error ");
+
+      } else {
+          setinp(data)
+          console.log("get data");
+
+      }
+  }
+  useEffect(() => {
+    getdata();
+}, []);
+
+
+const updateuser = async(e)=>{
+  e.preventDefault();
+
+  const {name,email} = inpval;
+
+  const res2 = await fetch(`/updateuser/${id}`,{
+      method: "PATCH",
+      headers: {
+          "Content-Type": "application/json"
+      },
+      body:JSON.stringify({
+          name,email
+      })
+  });
+
+  const data2 = await res2.json();
+  console.log(data2);
+
+  if(res2.status === 422 || !data2){
+      alert("fill the data");
+  }else{
+    alert("updated added");
+       history.push("/")
+      // setUPdata(data2);
+  }
+
+}
+
+
     return (
         <form >
             <div className="form">
@@ -41,7 +106,7 @@ const Edit = () => {
   </div>
   </div>
   <div className="button">
-  <button type="submit" class="btn btn-primary">Register</button>
+  <button type="submit" onClick={updateuser}  class="btn btn-primary">Update</button>
   </div>
 </form>
     )
